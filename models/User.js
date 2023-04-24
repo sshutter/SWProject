@@ -11,7 +11,7 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: [true, "Please add a telephone number."],
     unique: true,
-    length: 10,
+    maxlength: [10, "Telephone can not be more than 10 digits."],
   },
   email: {
     type: String,
@@ -25,7 +25,7 @@ const UserSchema = new mongoose.Schema({
   password: {
     type: String,
     required: [true, "Please enter a password."],
-    minlength: 6,
+    minlength: [6, "Password should be 6 characters or more."],
     select: false,
   },
   resetPasswordToken: String,
