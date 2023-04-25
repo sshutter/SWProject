@@ -23,7 +23,7 @@ exports.getBookings = async (req, res, next) => {
 
     res.status(200).json({
       success: true,
-      const: bookings.length,
+      count: bookings.length,
       data: bookings,
     });
   } catch (err) {
@@ -44,7 +44,7 @@ exports.getBooking = async (req, res, next) => {
       path: "campground",
       select: "name description tel",
     });
-
+    console.log((booking.endDate - booking.startDate) / 86400000);
     if (!booking) {
       return res.status(404).json({
         success: false,
@@ -84,17 +84,19 @@ exports.addBooking = async (req, res, next) => {
     // add user Id to req.body
     req.body.user = req.user.id;
 
-    // check for existed booking
-    const existedBooking = await Booking.find({ user: req.user.id });
+    const startDate = new Date(req.body.startDate);
+    const endDate = new Date(req.body.endDate);
 
-    // //If the user is not an admin, they can only create 3 appointment
-    // if (existedBooking.length >= 3 && req.user.role !== "admin") {
-    //   return res.status(400).json({
-    //     success: false,
-    //     message: `The user with ID ${req.user.id} has already made 3 appointments`,
-    //   });
-    // }
-    console.log(existedBooking);
+    const diffTime = endDate.getTime() - startDate.getTime();
+    const diffDays = diffTime / (1000 * 3600 * 24);
+
+    // the system shall allow the registered user to book up to 3 nights
+    if (diffDays > 3) {
+      return res.status(400).json({
+        success: false,
+        message: "You can book up to 3 nights",
+      });
+    }
 
     const booking = await Booking.create(req.body);
     res.status(200).json({
