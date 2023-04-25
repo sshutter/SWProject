@@ -23,6 +23,7 @@ const sendTokenResponse = (user, statusCode, res) => {
       _id: user._id,
       name: user.name,
       email: user.email,
+      role: user.role,
       // end for frontend
     });
 };
@@ -32,12 +33,13 @@ const sendTokenResponse = (user, statusCode, res) => {
 //@access   Public
 exports.register = async (req, res, next) => {
   try {
-    const { name, telephone, email, password } = req.body;
+    const { name, telephone, email, role, password } = req.body;
 
     const user = await User.create({
       name,
       telephone,
       email,
+      role,
       password,
     });
     // const token = user.getSignedJwtToken();

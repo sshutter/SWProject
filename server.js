@@ -3,6 +3,7 @@ const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 const auth = require("./routes/auth");
 const campgrounds = require("./routes/campgrounds");
+const bookings = require("./routes/bookings");
 const cookieParser = require("cookie-parser");
 const mongoSanitize = require("express-mongo-sanitize");
 const helmet = require("helmet");
@@ -44,6 +45,7 @@ app.unsubscribe(cookieParser());
 
 app.use("/api/v1/auth", auth);
 app.use("/api/v1/campgrounds", campgrounds);
+app.use("/api/v1/bookings", bookings);
 
 app.get("/", (req, res) => {
   res.status(200).json({ success: true, data: { id: 1 } });

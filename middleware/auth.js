@@ -3,7 +3,6 @@ const User = require("../models/User");
 
 //Protect Routes
 exports.protect = async (req, res, next) => {
-  console.log("This route is protected");
   let token;
 
   if (
@@ -35,4 +34,17 @@ exports.protect = async (req, res, next) => {
       .status(401)
       .json({ success: false, message: "Not authorize to access this route" });
   }
+};
+
+//Grant access to specific roles
+exports.authorize = (...roles) => {
+  return (req, res, next) => {
+    if (!roles.includes(req.user.role)) {
+      return res.status(403).json({
+        success: false,
+        massage: `User role ${req.user.role} is not authorized to access this route`,
+      });
+    }
+    next();
+  };
 };

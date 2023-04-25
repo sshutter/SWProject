@@ -24,7 +24,7 @@ exports.getCampgrounds = async (req, res, next) => {
     (match) => `$${match}`
   );
 
-  query = Campground.find(JSON.parse(queryStr)); //.populate("appointments");
+  query = Campground.find(JSON.parse(queryStr)).populate("bookings");
 
   // Select Fields
   if (req.query.select) {
@@ -138,7 +138,7 @@ exports.deleteCampground = async (req, res, next) => {
       });
     }
     // console.log(campground);
-    campground.remove();
+    await campground.deleteOne();
     res.status(200).json({ success: true, data: {} });
   } catch (err) {
     res.status(400).json({ success: false });
